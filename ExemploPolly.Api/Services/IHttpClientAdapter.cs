@@ -1,7 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ExemploPolly.Api
+namespace ExemploPolly.Api.Services
 {
 	public interface IHttpClientAdapter
 	{

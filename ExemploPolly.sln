@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExemploPolly", "ExemploPolly\ExemploPolly.csproj", "{005137A6-DAF0-41A9-B8CD-CAB55E392DAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExemploPolly.Api", "ExemploPolly.Api\ExemploPolly.Api.csproj", "{D8E68C13-5557-4B46-9592-3E798DE61DC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExemploPolly.Api", "ExemploPolly.Api\ExemploPolly.Api.csproj", "{D8E68C13-5557-4B46-9592-3E798DE61DC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

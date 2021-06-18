@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Net.Http;
 using Polly;
+using Polly.CircuitBreaker;
 using Polly.Retry;
 
-namespace ExemploPolly.Api
+namespace ExemploPolly.Api.Services
 {
 	public class PollyService : IPollyService
 	{
@@ -14,7 +16,7 @@ namespace ExemploPolly.Api
 			_configuracaoService = configuracaoService;
 		}
 
-		public AsyncRetryPolicy<HttpResponseMessage> TentarTresVezes(int desabilitarErroNaTentativa = 2)
+		public AsyncRetryPolicy<HttpResponseMessage> TentarTresVezes()
 		{
 			_configuracaoService.ErroHabilitado = true;
 
@@ -27,7 +29,7 @@ namespace ExemploPolly.Api
 					TimeSpan.FromSeconds(4)
 				}, (outcome, timeSpan, retryCount, context) =>
 				{
-					TratarRetentativas(desabilitarErroNaTentativa, retryCount);
+					TratarRetentativas(2, retryCount);
 				});
 		}
 
@@ -45,10 +47,19 @@ namespace ExemploPolly.Api
 
 			return Policy
 				.HandleResult<HttpResponseMessage>(message => !message.IsSuccessStatusCode)
-				.RetryForeverAsync(onRetry: result =>
-				{
-					LogService.Logar("Tentando novamente...");
-				});
+				.WaitAndRetryForeverAsync(
+					retryAttempt => TimeSpan.FromSeconds(3),
+					(exception, timespan, context) =>
+					{
+						LogService.Logar("Erro. Tentando novamente...");
+					});
+		}
+
+		public AsyncCircuitBreakerPolicy CircuitBreaker(Action onBreak, Action onReset)
+		{
+			return Policy
+				.Handle<DataException>()
+				.CircuitBreakerAsync(1, TimeSpan.FromMinutes(1), (exception, span) => onBreak(), onReset);
 		}
 	}
 }

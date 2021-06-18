@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExemploPolly.Api
+namespace ExemploPolly.Api.Services
 {
 	public class LogService
 	{

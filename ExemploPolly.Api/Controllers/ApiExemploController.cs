@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Data;
+using ExemploPolly.Api.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ExemploPolly.Api.Controllers
 {
@@ -17,6 +19,12 @@ namespace ExemploPolly.Api.Controllers
 		public IActionResult Requisicao()
 		{
 			return _configuracaoService.ErroHabilitado ? BadRequest("BadRequest") : Ok("Ok");
+		}
+
+		[HttpGet("RequisicaoPassivelErro")]
+		public IActionResult RequisicaoPassivelErro()
+		{
+			return _configuracaoService.ErroHabilitado ? throw new DataException("Erro na conexão com o banco de dados"): Ok("Ok");
 		}
 
 		[HttpGet("habilitarErros")]

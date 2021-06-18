@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ExemploPolly.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Polly;
+using Polly.CircuitBreaker;
 
 namespace ExemploPolly.Api.Controllers
 {
@@ -33,9 +37,40 @@ namespace ExemploPolly.Api.Controllers
 		{
 			LogarDivisao();
 			var policy = _pollyService.TentarEternamente();
-			var resposta = await policy.ExecuteAsync(() => _httpClientAdapter.Send(ObterHttpRequestMessageRequisicaoApiExemplo()));
+			var resposta = await policy.ExecuteAsync(() =>
+			{
+				return _httpClientAdapter.Send(ObterHttpRequestMessageRequisicaoApiExemplo());
+			});
 			return Retorno(resposta);
 		}
+
+		[HttpGet("CircuitBreaker")]
+		public async Task<IActionResult> CircuitBreaker()
+		{
+			LogarDivisao();
+
+			void OnBreak(Exception exception, TimeSpan timespan)
+			{
+				LogService.Logar("Circuito aberto");
+				_fakeService.SalvarNoBancoDeDadosTemporario();
+			}
+
+			void OnReset()
+			{
+				_fakeService.SalvarNoBancoDeDados();
+				LogService.Logar("Circuito restabelecido");
+			}
+
+			CircuitBreakerPolicy circuitBreakerPolicy = Policy
+				.Handle<Exception>()
+				.CircuitBreaker(2, TimeSpan.FromMinutes(1), OnBreak, OnReset);
+
+			circuitBreakerPolicy.Execute((() => _fakeService.SalvarNoBancoDeDados()));
+			
+			return Ok();
+		}
+
+
 
 		#endregion
 
@@ -43,27 +78,29 @@ namespace ExemploPolly.Api.Controllers
 
 		private readonly IHttpClientAdapter _httpClientAdapter;
 		private readonly IPollyService _pollyService;
+		private readonly IFakeService _fakeService;
 
 		#endregion
 
 		#region Construtores
 		
-		public PollyController(IHttpClientAdapter httpClientAdapter, IPollyService pollyService)
+		public PollyController(IHttpClientAdapter httpClientAdapter, IPollyService pollyService, IFakeService fakeService)
 		{
 			_httpClientAdapter = httpClientAdapter;
 			_pollyService = pollyService;
+			_fakeService = fakeService;
 		}
 
 		#endregion
 
 		#region Métodos
 
-		private HttpRequestMessage ObterHttpRequestMessageRequisicaoApiExemplo()
+		private HttpRequestMessage ObterHttpRequestMessageRequisicaoApiExemplo(string action = "requisicao")
 		{
 			var requestMessage = new HttpRequestMessage
 			{
 				Method = HttpMethod.Get,
-				RequestUri = new Uri("http://localhost:5000/apiexemplo/requisicao")
+				RequestUri = new Uri($"http://localhost:5000/apiexemplo/{action}")
 
 			};
 
