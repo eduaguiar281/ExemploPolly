@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ExemploPolly.Api
+namespace CircuitBreaker.Api
 {
     public class Program
     {

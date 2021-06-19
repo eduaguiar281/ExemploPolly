@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ExemploPolly.Api.Services
+namespace ApiCore
 {
 	public class HttpClientAdapter : IHttpClientAdapter
 	{
@@ -16,6 +16,6 @@ namespace ExemploPolly.Api.Services
 			};
 		}
 
-		public Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage) => _httpClient.SendAsync(httpRequestMessage);
+		public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage) => await _httpClient.SendAsync(httpRequestMessage);
 	}
 }

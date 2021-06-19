@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ExemploPolly.Api.Services
+namespace CircuitBreaker.Api.Services
 {
 	public interface IExemploCircuitoService
 	{

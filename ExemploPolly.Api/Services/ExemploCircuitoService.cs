@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace ExemploPolly.Api.Services
+namespace CircuitBreaker.Api.Services
 {
 	public class ExemploCircuitoService : IExemploCircuitoService
 	{
@@ -17,9 +17,7 @@ namespace ExemploPolly.Api.Services
 		public async Task<string> BuscarDado()
 		{
 			var response = await _httpClient.SendAsync(ObterHttpRequestMessageRequisicaoApiExemplo());
-
 			if (response.StatusCode != HttpStatusCode.OK) throw new CustomApiException(response.StatusCode);
-
 			return await response.Content.ReadAsStringAsync();
 		}
 

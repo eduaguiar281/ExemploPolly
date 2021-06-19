@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace ExemploPolly.Api.Services
+namespace CircuitBreaker.Api.Services
 {
 	public class CustomApiException : Exception
 	{

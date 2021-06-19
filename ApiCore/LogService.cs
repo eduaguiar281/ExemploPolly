@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExemploPolly.Api.Services
+namespace ApiCore
 {
 	public class LogService
 	{

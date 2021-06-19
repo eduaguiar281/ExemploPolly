@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
-using ExemploPolly.Api.Services;
+using CircuitBreaker.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Polly.CircuitBreaker;
 
-namespace ExemploPolly.Api.Middlewares
+namespace CircuitBreaker.Api.Middlewares
 {
 	public class ExceptionMiddleware
 	{
