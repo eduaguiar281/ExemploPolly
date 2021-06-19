@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Data;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ExemploPolly.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using Polly;
-using Polly.CircuitBreaker;
 
 namespace ExemploPolly.Api.Controllers
 {
@@ -18,7 +15,7 @@ namespace ExemploPolly.Api.Controllers
 		[HttpGet("EfetuarRequisicaoSemPolly")]
 		public IActionResult EfetuarRequisicaoSemPolly()
 		{
-			var requisicao = _httpClientAdapter.Send(ObterHttpRequestMessageRequisicaoApiExemplo()).Result;
+			var requisicao = _httpClientAdapter.SendAsync(ObterHttpRequestMessageRequisicaoApiExemplo()).Result;
 			LogService.Logar(ObterMensagemStatusRequisicao(requisicao));
 			return Retorno(requisicao);
 		}
@@ -28,7 +25,7 @@ namespace ExemploPolly.Api.Controllers
 		{
 			LogarDivisao();
 			var policy = _pollyService.TentarTresVezes();
-			var resposta = await policy.ExecuteAsync(() => _httpClientAdapter.Send(ObterHttpRequestMessageRequisicaoApiExemplo()));
+			var resposta = await policy.ExecuteAsync(() => _httpClientAdapter.SendAsync(ObterHttpRequestMessageRequisicaoApiExemplo()));
 			return Retorno(resposta);
 		}
 
@@ -39,56 +36,37 @@ namespace ExemploPolly.Api.Controllers
 			var policy = _pollyService.TentarEternamente();
 			var resposta = await policy.ExecuteAsync(() =>
 			{
-				return _httpClientAdapter.Send(ObterHttpRequestMessageRequisicaoApiExemplo());
+				return _httpClientAdapter.SendAsync(ObterHttpRequestMessageRequisicaoApiExemplo());
 			});
+
 			return Retorno(resposta);
 		}
 
 		[HttpGet("CircuitBreaker")]
 		public async Task<IActionResult> CircuitBreaker()
 		{
-			LogarDivisao();
-
-			void OnBreak(Exception exception, TimeSpan timespan)
-			{
-				LogService.Logar("Circuito aberto");
-				_fakeService.SalvarNoBancoDeDadosTemporario();
-			}
-
-			void OnReset()
-			{
-				_fakeService.SalvarNoBancoDeDados();
-				LogService.Logar("Circuito restabelecido");
-			}
-
-			CircuitBreakerPolicy circuitBreakerPolicy = Policy
-				.Handle<Exception>()
-				.CircuitBreaker(2, TimeSpan.FromMinutes(1), OnBreak, OnReset);
-
-			circuitBreakerPolicy.Execute((() => _fakeService.SalvarNoBancoDeDados()));
-			
-			return Ok();
+			var x = await _exemploCircuitoService.BuscarDado();
+			return Ok(x);
 		}
 
-
-
+	
 		#endregion
 
 		#region Campos
 
 		private readonly IHttpClientAdapter _httpClientAdapter;
 		private readonly IPollyService _pollyService;
-		private readonly IFakeService _fakeService;
+		private readonly IExemploCircuitoService _exemploCircuitoService;
 
 		#endregion
 
 		#region Construtores
-		
-		public PollyController(IHttpClientAdapter httpClientAdapter, IPollyService pollyService, IFakeService fakeService)
+
+		public PollyController(IHttpClientAdapter httpClientAdapter, IPollyService pollyService, IExemploCircuitoService exemploCircuitoService)
 		{
 			_httpClientAdapter = httpClientAdapter;
 			_pollyService = pollyService;
-			_fakeService = fakeService;
+			_exemploCircuitoService = exemploCircuitoService;
 		}
 
 		#endregion
@@ -100,7 +78,7 @@ namespace ExemploPolly.Api.Controllers
 			var requestMessage = new HttpRequestMessage
 			{
 				Method = HttpMethod.Get,
-				RequestUri = new Uri($"http://localhost:5000/apiexemplo/{action}")
+				RequestUri = new Uri($"http://localhost:55555/apiexemplo/{action}")
 
 			};
 

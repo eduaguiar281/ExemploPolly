@@ -1,4 +1,4 @@
-﻿namespace ExemploPolly.Api.Services
+﻿namespace ApiCore
 {
 	public interface IConfiguracaoService
 	{

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Net.Http;
+using ApiCore;
 using Polly;
-using Polly.CircuitBreaker;
 using Polly.Retry;
 
 namespace ExemploPolly.Api.Services
@@ -51,15 +50,8 @@ namespace ExemploPolly.Api.Services
 					retryAttempt => TimeSpan.FromSeconds(3),
 					(exception, timespan, context) =>
 					{
-						LogService.Logar("Erro. Tentando novamente...");
+						LogService.Logar("Erro. Tentarei novamente...");
 					});
-		}
-
-		public AsyncCircuitBreakerPolicy CircuitBreaker(Action onBreak, Action onReset)
-		{
-			return Policy
-				.Handle<DataException>()
-				.CircuitBreakerAsync(1, TimeSpan.FromMinutes(1), (exception, span) => onBreak(), onReset);
 		}
 	}
 }

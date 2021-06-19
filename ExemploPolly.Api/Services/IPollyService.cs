@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using Polly.CircuitBreaker;
+﻿using System.Net.Http;
 using Polly.Retry;
 
 namespace ExemploPolly.Api.Services
@@ -9,7 +7,5 @@ namespace ExemploPolly.Api.Services
 	{
 		AsyncRetryPolicy<HttpResponseMessage> TentarTresVezes();
 		AsyncRetryPolicy<HttpResponseMessage> TentarEternamente();
-
-		AsyncCircuitBreakerPolicy CircuitBreaker(Action onBreak, Action onReset);
 	}
 }

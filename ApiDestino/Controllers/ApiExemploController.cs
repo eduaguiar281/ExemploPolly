@@ -1,8 +1,8 @@
 ﻿using System.Data;
-using ExemploPolly.Api.Services;
+using ApiCore;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ExemploPolly.Api.Controllers
+namespace ApiDestino.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
@@ -18,7 +18,9 @@ namespace ExemploPolly.Api.Controllers
 		[HttpGet("Requisicao")]
 		public IActionResult Requisicao()
 		{
-			return _configuracaoService.ErroHabilitado ? BadRequest("BadRequest") : Ok("Ok");
+			if(_configuracaoService.ErroHabilitado) return BadRequest("BadRequest");
+			
+			return Ok("Ok");
 		}
 
 		[HttpGet("RequisicaoPassivelErro")]

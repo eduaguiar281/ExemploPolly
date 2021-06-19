@@ -16,6 +16,6 @@ namespace ExemploPolly.Api.Services
 			};
 		}
 
-		public Task<HttpResponseMessage> Send(HttpRequestMessage httpRequestMessage) => _httpClient.SendAsync(httpRequestMessage);
+		public Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage) => _httpClient.SendAsync(httpRequestMessage);
 	}
 }

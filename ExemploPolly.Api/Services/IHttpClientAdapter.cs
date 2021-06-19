@@ -5,6 +5,6 @@ namespace ExemploPolly.Api.Services
 {
 	public interface IHttpClientAdapter
 	{
-		Task<HttpResponseMessage> Send(HttpRequestMessage httpRequestMessage);
+		Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage);
 	}
 }
