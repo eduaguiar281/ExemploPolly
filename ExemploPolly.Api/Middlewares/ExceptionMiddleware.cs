@@ -33,7 +33,6 @@ namespace CircuitBreaker.Api.Middlewares
 
 		private static void HandleCircuitBreakerExceptionAsync(HttpContext context)
 		{
-			context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
 			context.Response.WriteAsync("Circuit breaker aberto!");
 		}
 

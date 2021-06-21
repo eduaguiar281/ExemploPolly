@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ApiCore;
 
 namespace CircuitBreaker.Api.Services
 {
@@ -16,8 +17,12 @@ namespace CircuitBreaker.Api.Services
 
 		public async Task<string> BuscarDado()
 		{
+			LogService.Logar("Recebendo requisição na action com circuit breaker");
+
 			var response = await _httpClient.SendAsync(ObterHttpRequestMessageRequisicaoApiExemplo());
 			if (response.StatusCode != HttpStatusCode.OK) throw new CustomApiException(response.StatusCode);
+
+			LogService.Logar("Ok!!!");
 			return await response.Content.ReadAsStringAsync();
 		}
 

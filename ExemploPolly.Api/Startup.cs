@@ -43,9 +43,7 @@ namespace CircuitBreaker.Api
 				.AddPolicyHandler(EsperarTentar())
 				.AddTransientHttpErrorPolicy(p =>
 				{
-					var numeroDeFalhasParaAbrirCircuito = 3;
-					var segundosAberto = TimeSpan.FromSeconds(10);
-					return p.CircuitBreakerAsync(numeroDeFalhasParaAbrirCircuito, segundosAberto, OnBreak, OnReset);
+					return p.CircuitBreakerAsync(3, TimeSpan.FromSeconds(10), OnBreak, OnReset);
 				});
 			///////////////////////////////////////////////////////////////////////////
 			///////////////////////////////////////////////////////////////////////////
@@ -69,11 +67,15 @@ namespace CircuitBreaker.Api
 		{
 			return Policy
 				.HandleResult<HttpResponseMessage>(message => message.StatusCode == HttpStatusCode.InternalServerError)
-				.WaitAndRetryForeverAsync((i, context) => TimeSpan.FromSeconds(2), (outcome, timespan, retryCount, context) =>
+				.WaitAndRetryAsync(new[]
 				{
-					Console.ForegroundColor = ConsoleColor.Blue;
-					Console.WriteLine("Vou fazer outra tentativa");
-					Console.ForegroundColor = ConsoleColor.White;
+					TimeSpan.FromSeconds(1),
+					TimeSpan.FromSeconds(1),
+					TimeSpan.FromSeconds(2),
+					TimeSpan.FromSeconds(2),
+				}, (outcome, timeSpan, retryCount, context) =>
+				{
+					LogService.Logar($"Tentativa {retryCount}");
 				});
 		}
 
