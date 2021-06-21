@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using ApiCore;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,12 @@ namespace ApiDestino.Controllers
 			if(_configuracaoService.ErroHabilitado) return BadRequest("BadRequest");
 			
 			return Ok("Ok");
+		}
+
+		[HttpGet("RequisicaoPorParametro")]
+		public IActionResult RequisicaoPorParametro(string id)
+		{
+			return Ok(Guid.NewGuid());
 		}
 
 		[HttpGet("RequisicaoPassivelErro")]

@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Retry", "3 - Retry", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Circuit breaker", "4 - Circuit breaker", "{B02E0DBE-0463-492B-9FF2-ABCA08D9E86B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cache.Api", "Cache.Api\Cache.Api.csproj", "{C7F20026-A112-4669-9A06-47CC2C498698}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Cache", "5 - Cache", "{AB6B56A2-E665-4CA5-8575-288C1352BB43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,10 @@ Global
 		{7C64280B-20D6-4E06-AD24-DD3CCA2BEE1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C64280B-20D6-4E06-AD24-DD3CCA2BEE1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C64280B-20D6-4E06-AD24-DD3CCA2BEE1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7F20026-A112-4669-9A06-47CC2C498698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7F20026-A112-4669-9A06-47CC2C498698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7F20026-A112-4669-9A06-47CC2C498698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7F20026-A112-4669-9A06-47CC2C498698}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,7 @@ Global
 		{0FF9CB88-5652-45EB-B09A-300067C94E64} = {B5E2D569-5EE3-4459-A714-BD395D822BFD}
 		{CE2D92C8-4699-4C48-9BCA-CBA5A241D5D9} = {B8BE6ACE-9965-4FFB-81FF-E4D4284498A2}
 		{7C64280B-20D6-4E06-AD24-DD3CCA2BEE1F} = {5173A28D-8DAA-49C4-8AF0-909D78D12C70}
+		{C7F20026-A112-4669-9A06-47CC2C498698} = {AB6B56A2-E665-4CA5-8575-288C1352BB43}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {79D7C072-9EC1-43DD-896B-DB21A12FD6C7}

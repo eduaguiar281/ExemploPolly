@@ -4,7 +4,8 @@
 		"windowsAuthentication": false,
 		"anonymousAuthentication": true,
 		"iisExpress": {
-			"applicationUrl": "http://localhost:53058"
+			"applicationUrl": "http://localhost:8844",
+			"sslPort": 0
 		}
 	},
 	"profiles": {
@@ -15,16 +16,6 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
-		}
-	},
-	"ExemploPolly.Api": {
-		"commandName": "Project",
-		"dotnetRunMessages": "true",
-		"launchBrowser": true,
-		"launchUrl": "swagger",
-		"applicationUrl": "http://localhost:5000, https://localhost:5001",
-		"environmentVariables": {
-			"ASPNETCORE_ENVIRONMENT": "Development"
 		}
 	}
 }

@@ -16,15 +16,5 @@
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
 		}
-	},
-	"ExemploPolly.Api": {
-		"commandName": "Project",
-		"dotnetRunMessages": "true",
-		"launchBrowser": true,
-		"launchUrl": "swagger",
-		"applicationUrl": "http://localhost:5020",
-		"environmentVariables": {
-			"ASPNETCORE_ENVIRONMENT": "Development"
-		}
 	}
 }
