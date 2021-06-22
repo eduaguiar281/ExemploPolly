@@ -14,8 +14,6 @@ namespace ExemploSimmy
         {
             Policy policy = PollyWaitAndRetry();
 
-            //Policy policy = PollyWaitAndRetryMathPow();
-
             //Policy policy = SimmyInjectException1();
 
             //Policy policy = SimmyInjectLatency();
@@ -30,7 +28,7 @@ namespace ExemploSimmy
             {
                 //throw new SocketException(errorCode: 10013);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Ação Executada");
+                Console.WriteLine("Ação executada com sucesso!");
                 Console.ForegroundColor = ConsoleColor.White;
             });
 
@@ -49,29 +47,6 @@ namespace ExemploSimmy
                         TimeSpan.FromSeconds(2),
                         TimeSpan.FromSeconds(3),
                         TimeSpan.FromSeconds(4),
-                    },
-                    onRetry: (exception, timeSpan, retryCount, context) =>
-                    {
-                        Console.WriteLine($"Retentativa: {retryCount}");
-                        Console.WriteLine($"Erro: {exception.Message}");
-                        Console.WriteLine($"TimeSpan: {timeSpan}");
-                        Console.WriteLine();
-                    }
-                );
-
-            return policy;
-        }
-
-        private static Policy PollyWaitAndRetryMathPow()
-        {
-            RetryPolicy policy = Policy
-                .Handle<Exception>()
-                .WaitAndRetry
-                (
-                    retryCount: 8,
-                    sleepDurationProvider: (retryCount, exception, context) =>
-                    {
-                        return TimeSpan.FromSeconds(Math.Pow(retryCount, 2));
                     },
                     onRetry: (exception, timeSpan, retryCount, context) =>
                     {
