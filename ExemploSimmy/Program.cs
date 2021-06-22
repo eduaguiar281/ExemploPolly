@@ -1,9 +1,10 @@
-﻿using Polly.Contrib.Simmy;
+﻿using Polly;
+using Polly.Contrib.Simmy;
+using Polly.Contrib.Simmy.Latency;
 using Polly.Contrib.Simmy.Outcomes;
-using Polly;
+using Polly.Retry;
 using System;
 using System.Net.Sockets;
-using Polly.Retry;
 
 namespace ExemploSimmy
 {
@@ -15,47 +16,25 @@ namespace ExemploSimmy
 
             //Policy policy = PollyWaitAndRetryMathPow();
 
-            //Policy policy = SimmyInjectException();
+            //Policy policy = SimmyInjectException1();
+
+            //Policy policy = SimmyInjectLatency();
 
             //Policy policy = Policy.Wrap(PollyWaitAndRetry(), SimmyInjectException1());
 
+            //Policy policy = Policy.Wrap(PollyWaitAndRetry(), SimmyInjectException1(), SimmyInjectLatency());
+
             //Policy policy = Policy.Wrap(PollyWaitAndRetry(), SimmyInjectException1(), SimmyInjectException2());
 
-            policy.Execute(() => 
+            policy.Execute(() =>
             {
-                throw new SocketException(errorCode: 10013);
+                //throw new SocketException(errorCode: 10013);
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Ação Executada");
                 Console.ForegroundColor = ConsoleColor.White;
             });
 
             Console.ReadKey();
-        }
-
-        private static Policy ComoMontarUmaPolicy()
-        {
-            var policy = Policy
-                .Handle<ApplicationException>() // Handler
-                .Or<NotSupportedException>() // Outro Handler
-                .WaitAndRetry // Pattner (Retry, WaitAndRetry, CircuitBreaker, Fallback, RetryForever)
-                (
-                    sleepDurations: new TimeSpan[]
-                    {
-                        TimeSpan.FromSeconds(1),
-                        TimeSpan.FromSeconds(2),
-                        TimeSpan.FromSeconds(3),
-                        TimeSpan.FromSeconds(4),
-                    },
-                    onRetry: (exception, timeSpan, retryCount, context) =>
-                    {
-                        Console.WriteLine($"Retentativa: {retryCount}");
-                        Console.WriteLine($"Erro: {exception.Message}");
-                        Console.WriteLine($"TimeSpan: {timeSpan}");
-                        Console.WriteLine();
-                    }
-                );
-
-            return policy;
         }
 
         private static Policy PollyWaitAndRetry()
@@ -87,10 +66,10 @@ namespace ExemploSimmy
         {
             RetryPolicy policy = Policy
                 .Handle<Exception>()
-                .WaitAndRetry 
+                .WaitAndRetry
                 (
                     retryCount: 8,
-                    sleepDurationProvider: (retryCount, exception, context) => 
+                    sleepDurationProvider: (retryCount, exception, context) =>
                     {
                         return TimeSpan.FromSeconds(Math.Pow(retryCount, 2));
                     },
@@ -109,11 +88,14 @@ namespace ExemploSimmy
         private static Policy SimmyInjectException1()
         {
             var fault = new SocketException(errorCode: 10013);
-            InjectOutcomePolicy chaosPolicy = MonkeyPolicy.InjectException(with =>
-                with.Fault(fault)
-                    .InjectionRate(0.4)
-                    .Enabled(true)
-                );
+
+            InjectOutcomePolicy chaosPolicy = MonkeyPolicy
+                .InjectException(configureOptions =>
+                {
+                    configureOptions.Fault(fault);
+                    configureOptions.InjectionRate(0.6);
+                    configureOptions.Enabled(true);
+                });
 
             return chaosPolicy;
         }
@@ -121,11 +103,27 @@ namespace ExemploSimmy
         private static Policy SimmyInjectException2()
         {
             var fault = new ApplicationException("Erro 02");
-            InjectOutcomePolicy chaosPolicy = MonkeyPolicy.InjectException(with =>
-                with.Fault(fault)
-                    .InjectionRate(0.5)
-                    .Enabled(true)
-                );
+
+            InjectOutcomePolicy chaosPolicy = MonkeyPolicy
+                .InjectException(configureOptions =>
+                {
+                    configureOptions.Fault(fault);
+                    configureOptions.InjectionRate(0.6);
+                    configureOptions.Enabled(true);
+                });
+
+            return chaosPolicy;
+        }
+
+        private static Policy SimmyInjectLatency()
+        {
+            InjectLatencyPolicy chaosPolicy = MonkeyPolicy
+                .InjectLatency(configureOptions =>
+                {
+                    configureOptions.Latency(TimeSpan.FromSeconds(5));
+                    configureOptions.InjectionRate(1);
+                    configureOptions.Enabled(true);
+                });
 
             return chaosPolicy;
         }
